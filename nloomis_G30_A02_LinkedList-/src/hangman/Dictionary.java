@@ -7,7 +7,7 @@ import linked_data_structures.SinglyLinkedList;
 public class Dictionary {
 	private SinglyLinkedList<String> allWords = new SinglyLinkedList<>();
 
-	
+	// Git test
 	public Dictionary() {
 		System.out.println("NEW DICTIONARY GETTING CREATED");
 
