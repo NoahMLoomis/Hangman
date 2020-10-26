@@ -8,23 +8,25 @@ import java.io.ObjectOutputStream;
 import linked_data_structures.*;
 
 public class SingleGame implements java.io.Serializable{
-	public static HangmanGame game = new HangmanGame();
+	public static HangmanGame game;
 	private SinglyLinkedList<String> wordLetters;
 	private SinglyLinkedList<String> guessedLetters;
 	private String theWord;
 	private int badGuessNum;
 	private StringBuilder hiddenWord;
 	private boolean gameWon;
-	private String filename;
 	
 	
 	public SingleGame() {
 		System.out.println("NEW SINGLEGAME GETTING CREATED");
-
-//		System.out.println(game.dic.allWords.getLength());
-//		this.theWord = game.dic.getNextWord();
-//		System.out.println(game.dic.allWords.getLength());
-
+		
+		if (game == null) {
+			System.out.println("NEW HANGMANGAME GETTING CREATED");
+			game = new HangmanGame();
+		}else {
+			game = this.resumeGame();
+		}
+		
 		gameWon = false;
 		wordLetters = new SinglyLinkedList<String>();
 		guessedLetters = new SinglyLinkedList<String>();
@@ -38,9 +40,13 @@ public class SingleGame implements java.io.Serializable{
 		toString();
 	}
 	
+	//Add setWord to verify it's a proper length? !=empty?
+	
 	public SinglyLinkedList getGuessedLetters() {
 		return guessedLetters;
 	}
+	
+	//When hint, inc guess
 
 	public void hint() {
 		int randIndex = (int) ((Math.random() * (wordLetters.getLength())));
@@ -60,13 +66,15 @@ public class SingleGame implements java.io.Serializable{
 		return 6 - badGuessNum;
 	}
 
+	
+	//That anything that isn't a letter
 	public String toString() {
 		hiddenWord = new StringBuilder();
 		for (int i = 0; i < wordLetters.getLength(); i++) {
-			if (!(wordLetters.getElementAt(i).equalsIgnoreCase("-"))) {
+			if ((Character.isLetter(wordLetters.getElementAt(i).charAt(0)))) {
 				hiddenWord.append("*");
 			} else {
-				hiddenWord.append("-");
+				hiddenWord.append(wordLetters.getElementAt(i));
 			}
 
 			for (int j = 0; j < guessedLetters.getLength(); j++) {
@@ -128,7 +136,7 @@ public class SingleGame implements java.io.Serializable{
 
 	public void save(){
 	
-			filename = "./cereal/gameSerealized.txt"; 
+			String filename = "./cereal/singleGameSerealized.txt"; 
 		
 		try {
 			FileOutputStream file = new FileOutputStream(filename);
@@ -136,14 +144,38 @@ public class SingleGame implements java.io.Serializable{
 			
 			out.writeObject(this);
 			file.close();
-			System.out.println("Object has been serealized");
-			
 		}catch (Exception e) {
-			System.out.println("error with serealization " + e);
+			System.out.println("error with serealization for SingleGame " + e);
 		}
 	}
-
-
+	
+	public HangmanGame resumeGame() {
+		
+		HangmanGame prevGame=null;
+		//		= new HangmanGame();
+		
+//		if (prevGame != null) {
+		
+	     try
+	     {  
+	    	String filename = "./cereal/gameSerealized.txt"; 
+	         // Reading the object from a file 
+	         FileInputStream file = new FileInputStream(filename); 
+	         ObjectInputStream in = new ObjectInputStream(file); 
+	           
+	         prevGame = (HangmanGame)in.readObject(); 
+	           
+	         in.close(); 
+	         file.close(); 
+	           
+	     } 
+	       
+	     catch(Exception e) 
+	     { 
+	         System.out.println("IOException is caught in SingleGame " + e); 
+	     } 
+		return prevGame;
+	}
 
 
 }

@@ -12,8 +12,9 @@ import java.awt.Dimension;
 import javax.swing.JLabel;
 
 public class ScoreBoard extends JPanel {
-	private JTable table;
 	private DoublyLinkedList<Player> players = new DoublyLinkedList();
+	private JTable table;
+	DefaultTableModel model;
 	/**
 	 * Create the panel.
 	 */
@@ -22,6 +23,7 @@ public class ScoreBoard extends JPanel {
 		
 	}
 	
+
 	
 	private Player getNextPlayer(int i) {
 		Player currPlayer=null;
@@ -32,6 +34,7 @@ public class ScoreBoard extends JPanel {
 		}
 		return currPlayer;
 	}
+	
 
 	private void sort() {
 //		 TODO sort the players list
@@ -51,17 +54,18 @@ public class ScoreBoard extends JPanel {
 //		System.out.println(Times Played  + findPlayer(playerName).getTimesPlayed());
 //		System.out.println(Times Won  + findPlayer(playerName).getWins());
 //		System.out.println(Times Won  + findPlayer(playerName).getLosses());
-
+		addToScoreboard();
 		return findPlayer(playerName);
 	}
 	
 	
 	
-//	  findPlayer(String playerName) searches through the players DoublyLinkedList
-//	  		if the player is not named or null, is given the default name of Anonymous
-//	  		if the player already exists, do nothing
-//	  		if the player does not exist, create a new player and add to players DoublyLinkedList
-//	  return the player
+/*	  findPlayer(String playerName) searches through the players DoublyLinkedList
+	  		if the player is not named or null, is given the default name of Anonymous
+	  		if the player already exists, do nothing
+	  		if the player does not exist, create a new player and add to players DoublyLinkedList
+			return the player
+*/  
 	 
 
 	public Player findPlayer(String playerName) {
@@ -82,10 +86,21 @@ public class ScoreBoard extends JPanel {
 		if (!playerFound) {
 			currPlayer= new Player(playerName);
 			players.add(currPlayer);
+			addToScoreboard();
 		}
 		
 		return currPlayer;
 		
+	}
+	
+	private void addToScoreboard() {
+		players.add(new Player("Noah"));
+		System.out.println("Player length is " + players.getLength());
+		for (int i=0; i< players.getLength(); i++) {
+			System.out.println("INSIDE INITIALIZE()");
+
+			model.addRow(new Object[] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getLosses()});
+		}
 	}
 	
 	public int getNumPlayers() {
@@ -93,7 +108,6 @@ public class ScoreBoard extends JPanel {
 	}
 
 	public DoublyLinkedList<Player> getPlayers(){
-		System.out.println("Printing all players");
 		for (int i=0; i< players.getLength(); i++) {
 			System.out.println(players.getElementAt(i).getPlayerName());
 		}
@@ -110,23 +124,25 @@ public class ScoreBoard extends JPanel {
 		add(scrollPane);
 		
 		table = new JTable();
+		
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Name", "Wins", "Times Played"
+				"Name", "Wins", "Total games played"
 			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, Integer.class, Integer.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(2).setResizable(false);
+		));
+		
 		scrollPane.setViewportView(table);
+		model = (DefaultTableModel)table.getModel();
+		
+		players.add(new Player("Tristan"));
+		System.out.println("player length is " + players.getLength());
+		for (int i=0; i<players.getLength(); i++) {
+			System.out.println("INSIDE INITIALIZE()");
+			System.out.println(players.getElementAt(i).getPlayerName());
+			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
+		}
 		
 		JLabel lblNewLabel = new JLabel("ScoreBoard");
 		lblNewLabel.setBounds(202, 21, 151, 37);
