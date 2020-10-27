@@ -30,7 +30,7 @@ public class Dictionary {
 		int randIndex = (int) ((Math.random() * (allWords.getLength())));
 		String temp = allWords.getElementAt(randIndex);
 		allWords.remove(randIndex);
-
+		System.out.println("Number of words left is "+allWords.getLength());
 		return temp;
 	}
 

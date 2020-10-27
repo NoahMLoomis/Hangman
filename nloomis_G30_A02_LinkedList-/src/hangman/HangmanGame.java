@@ -14,13 +14,12 @@ public class HangmanGame implements java.io.Serializable{
 	
 	 public HangmanGame() {
 //		System.out.println("NEW HANGMANGAME GETTING CREATED");
-
+		 
 		board = new ScoreBoard();
 		dic= new Dictionary();
 	}
 	
 	public String sendNextWord() {
-		
 		return dic.getNextWord();
 	}
 	
@@ -58,7 +57,7 @@ public class HangmanGame implements java.io.Serializable{
 			
 			out.writeObject(this);
 			file.close();
-			System.out.println("Object has been serealized");
+			System.out.println("HangmanGame has been serealized");
 			
 		}catch (Exception e) {
 			System.out.println("error with serealization " + e);

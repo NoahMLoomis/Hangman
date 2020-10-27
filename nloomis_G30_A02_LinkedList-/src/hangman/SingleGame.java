@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import linked_data_structures.*;
 
 public class SingleGame implements java.io.Serializable{
-	public static HangmanGame game;
+	public static HangmanGame game = new HangmanGame();
 	private SinglyLinkedList<String> wordLetters;
 	private SinglyLinkedList<String> guessedLetters;
 	private String theWord;
@@ -19,20 +19,20 @@ public class SingleGame implements java.io.Serializable{
 	
 	public SingleGame() {
 		System.out.println("NEW SINGLEGAME GETTING CREATED");
-		
+		game = this.resumeGame();
 		if (game == null) {
 			System.out.println("NEW HANGMANGAME GETTING CREATED");
 			game = new HangmanGame();
 		}else {
-			game = this.resumeGame();
+			System.out.println("Tryring to resume game");
 		}
 		
 		gameWon = false;
 		wordLetters = new SinglyLinkedList<String>();
 		guessedLetters = new SinglyLinkedList<String>();
 		badGuessNum = 0;
+		this.theWord = "Test";
 		this.theWord = game.sendNextWord();
-		System.out.println(theWord);
 		
 		for (int i = 0; i < theWord.length(); i++) {
 			wordLetters.add(theWord.charAt(i) + "", i);
@@ -144,6 +144,8 @@ public class SingleGame implements java.io.Serializable{
 			
 			out.writeObject(this);
 			file.close();
+			
+			System.out.println("Single Game serealized");
 		}catch (Exception e) {
 			System.out.println("error with serealization for SingleGame " + e);
 		}
@@ -152,9 +154,6 @@ public class SingleGame implements java.io.Serializable{
 	public HangmanGame resumeGame() {
 		
 		HangmanGame prevGame=null;
-		//		= new HangmanGame();
-		
-//		if (prevGame != null) {
 		
 	     try
 	     {  
@@ -167,8 +166,8 @@ public class SingleGame implements java.io.Serializable{
 	           
 	         in.close(); 
 	         file.close(); 
-	           
-	     } 
+	         System.out.println("Resumimg the HangmanGame from SingleGame");
+	     }
 	       
 	     catch(Exception e) 
 	     { 

@@ -19,6 +19,13 @@ public class ScoreBoard extends JPanel {
 	 * Create the panel.
 	 */
 	public ScoreBoard() {
+		
+
+		
+		for (int i=0; i<players.getLength(); i++) {
+			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
+		}
+		
 		initialize();
 		
 	}
@@ -49,12 +56,6 @@ public class ScoreBoard extends JPanel {
 			findPlayer(playerName).incLosses();
 		}
 		
-//		System.out.println(Player when game finished);
-//		System.out.println(Name  + findPlayer(playerName).getPlayerName());
-//		System.out.println(Times Played  + findPlayer(playerName).getTimesPlayed());
-//		System.out.println(Times Won  + findPlayer(playerName).getWins());
-//		System.out.println(Times Won  + findPlayer(playerName).getLosses());
-		addToScoreboard();
 		return findPlayer(playerName);
 	}
 	
@@ -86,18 +87,19 @@ public class ScoreBoard extends JPanel {
 		if (!playerFound) {
 			currPlayer= new Player(playerName);
 			players.add(currPlayer);
-			addToScoreboard();
 		}
 		
 		return currPlayer;
 		
 	}
 	
-	private void addToScoreboard() {
-		players.add(new Player("Noah"));
-		System.out.println("Player length is " + players.getLength());
+	public void addToScoreboard(String playername) {
+		Player currPlayer = new Player(playername);
+		
+		players.add(currPlayer);
+//		System.out.println("Player length is " + players.getLength());
 		for (int i=0; i< players.getLength(); i++) {
-			System.out.println("INSIDE INITIALIZE()");
+//			System.out.println("INSIDE INITIALIZE() for addToScoreboard()");
 
 			model.addRow(new Object[] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getLosses()});
 		}
@@ -108,9 +110,9 @@ public class ScoreBoard extends JPanel {
 	}
 
 	public DoublyLinkedList<Player> getPlayers(){
-		for (int i=0; i< players.getLength(); i++) {
-			System.out.println(players.getElementAt(i).getPlayerName());
-		}
+//		for (int i=0; i< players.getLength(); i++) {
+//			System.out.println(players.getElementAt(i).getPlayerName());
+//		}
 		return players;
 	}
 	
@@ -137,10 +139,7 @@ public class ScoreBoard extends JPanel {
 		model = (DefaultTableModel)table.getModel();
 		
 		players.add(new Player("Tristan"));
-		System.out.println("player length is " + players.getLength());
 		for (int i=0; i<players.getLength(); i++) {
-			System.out.println("INSIDE INITIALIZE()");
-			System.out.println(players.getElementAt(i).getPlayerName());
 			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
 		}
 		

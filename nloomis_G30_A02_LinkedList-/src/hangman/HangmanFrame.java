@@ -15,8 +15,6 @@ import javax.swing.*;
 
 public class HangmanFrame implements ActionListener, WindowListener {
 
-	private int count = 0;
-
 	private JFrame frame = new JFrame();
 	private ArrayList<JButton> letterButtons = new ArrayList<>();
 	private char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
@@ -50,15 +48,16 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	private ImageIcon leg1Img = new ImageIcon("images/leg1.png");
 	private ImageIcon leg2Img = new ImageIcon("images/leg2.png");
 
-	private ImageIcon[] imgArr = {leg2Img, leg1Img, arm2Img, arm1Img, bodyImg, headImg, standImg};
-	
+	private ImageIcon[] imgArr = { leg2Img, leg1Img, arm2Img, arm1Img, bodyImg, headImg, standImg };
+
 	private JLabel lblNumGuesses = new JLabel();
 	private SingleGame newGame;
 	private JTextField fldHidden = new JTextField();
 	private JLabel stand = new JLabel();
 	private JLabel lblName = new JLabel();
-	private String name="";
+	private String name = "";
 	JButton btnResume = new JButton("Resume last game");
+
 	/**
 	 * Launch the application.
 	 */
@@ -66,7 +65,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					
+
 					HangmanFrame window = new HangmanFrame();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -78,10 +77,16 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	/**
-	 * Create the application.
+	 * TODO: 
+	 * 	-Do adding to scoreboard when a player starts a game
+	 *  -Do adding to scoreboard when a player ends a game
+	 *  -Do "Previous player" stuff
+	 *  -save() and Resume(), real ugly, there's gotta be a better way
+	 *  -Able to resume game from a specific player, if none specified, resume last saved game
+	 *  -Garbage Collection
+	 *  -Final review
 	 */
 	public HangmanFrame() {
-		
 		for (char i : alphabet) {
 			JButton btni = new JButton(i + "");
 			btni.addActionListener(this);
@@ -95,41 +100,39 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		if (namefld.getText().equalsIgnoreCase("") && (cmbxPrevPlayers.getSelectedIndex() == 0)) {
 			return false;
 		}
-		
+
 		if (cmbxPrevPlayers.getSelectedIndex() != 0) {
 			name = cmbxPrevPlayers.getSelectedItem().toString();
-		}else {
+		} else {
 			name = namefld.getText();
 		}
 		return true;
 
+		// TODO Validate name is valid
+//		 validate that they selected something from dropdown
 	}
 
 	private void startGame() {
-//		newGame = new SingleGame();
-		newGame.game.board.findPlayer(name);
-		
-		
-		
+//		newGame.game.board.findPlayer(name);	
+		newGame.game.board.addToScoreboard(name);
+
 		fileMenu.setEnabled(true);
-		
-		for (JButton btn: letterButtons) {
+
+		for (JButton btn : letterButtons) {
 			btn.setEnabled(true);
-			for(int i=0; i< newGame.getGuessedLetters().getLength(); i++) {
+			btn.setBackground(new Color(69, 153, 64)); // Reseting all the buttons to be enabled and the right color
+			for (int i = 0; i < newGame.getGuessedLetters().getLength(); i++) {
 				if (btn.getText().equalsIgnoreCase(newGame.getGuessedLetters().getElementAt(i) + "")) {
-					System.out.println("DISABLING BTN + " + btn.getText());
 					btn.setBackground(new Color(255, 255, 255));
 					btn.setEnabled(false);
 				}
-					
-				
 			}
 		}
+
 		fldHidden.setText(newGame.toString());
 		lblNumGuesses.setText(newGame.getGuessesLeft() + "");
 		stand.setIcon(imgArr[newGame.getGuessesLeft()]);
 
-		
 		btnResume.setEnabled(false);
 		btnPlay.setEnabled(false);
 		namefld.setEnabled(false);
@@ -141,7 +144,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	private void initialize() {
 		
 		newGame = new SingleGame();
-		
+
 		frame.getContentPane().setBackground(new Color(149, 64, 153));
 		frame.getContentPane().setForeground(Color.WHITE);
 		frame.setBounds(100, 100, 837, 660);
@@ -154,8 +157,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		letterpanel.setBounds(366, 168, 300, 291);
 		frame.getContentPane().add(letterpanel);
 		letterpanel.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		
+
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
 		rulesMenuItem = new JMenuItem("Rules");
@@ -164,19 +166,16 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		quitMenuItem = new JMenuItem("Quit Game");
 		hintMenuItem = new JMenuItem("Hint");
 		newgameMenuItem = new JMenuItem("New Game");
-		
-		
+
 		frame.setJMenuBar(menuBar);
 		menuBar.add(fileMenu);
-//		fileMenu.setEnabled(false);
+		fileMenu.setEnabled(false);
 		fileMenu.add(saveMenuItem);
 		fileMenu.add(scoreboardMenuItem);
 		fileMenu.add(quitMenuItem);
 		fileMenu.add(hintMenuItem);
 		fileMenu.add(newgameMenuItem);
 		fileMenu.add(rulesMenuItem);
-		
-		
 
 		saveMenuItem.addActionListener(this);
 		scoreboardMenuItem.addActionListener(this);
@@ -185,7 +184,6 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		newgameMenuItem.addActionListener(this);
 		rulesMenuItem.addActionListener(this);
 
-		
 		for (JButton btn : letterButtons) {
 			btn.setEnabled(false);
 			btn.setForeground(new Color(109, 232, 2));
@@ -203,15 +201,12 @@ public class HangmanFrame implements ActionListener, WindowListener {
 //		comboBox = new JComboBox();
 		cmbxPrevPlayers.setEnabled(true);
 		cmbxPrevPlayers.setModel(new DefaultComboBoxModel(new String[] { "Previous Players" }));
-		
+
 		for (int i=0; i< newGame.game.board.getNumPlayers(); i++) {
 			System.out.println(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
 			cmbxPrevPlayers.addItem(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
 		}
-	
-		
-		
-		
+
 		cmbxPrevPlayers.setBounds(494, 62, 147, 21);
 		frame.getContentPane().add(cmbxPrevPlayers);
 		lblOr.setText("OR");
@@ -249,7 +244,6 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		stand.setBounds(84, 168, 272, 291);
 		frame.getContentPane().add(stand);
 
-
 //		lblNumGuesses = new JLabel("6");
 		lblNumGuesses.setBounds(494, 484, 53, 19);
 		frame.getContentPane().add(lblNumGuesses);
@@ -268,7 +262,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblName.setBounds(54, 66, 108, 13);
 		frame.getContentPane().add(lblName);
-		
+
 //		JButton btnResume = new JButton("Resume last game");
 		btnResume.addActionListener(this);
 		btnResume.setForeground(new Color(102, 51, 102));
@@ -277,7 +271,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		btnResume.setBounds(432, 112, 160, 21);
 		frame.getContentPane().add(btnResume);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -290,10 +284,9 @@ public class HangmanFrame implements ActionListener, WindowListener {
 			} else {
 				JOptionPane.showMessageDialog(null, "Please enter a name or select one from the dropdown");
 			}
-		}else if (e.getSource() == btnResume) {
+		} else if (e.getSource() == btnResume) {
 			resume_ActionPerformed();
-		}
-		else if (e.getSource() == scoreboardMenuItem) {
+		} else if (e.getSource() == scoreboardMenuItem) {
 			scoreboard_ActionPerformed();
 		} else if (e.getSource() == hintMenuItem) {
 			hint_ActionPerformed();
@@ -308,20 +301,20 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		}
 
 		for (JButton btn : letterButtons) {
-			
 			if (e.getSource() == btn) {
 				btn.setBackground(new Color(255, 255, 255));
 				btn.setEnabled(false);
-					if (newGame.guessLetter(btn.getText().charAt(0))) {
-						fldHidden.setText(newGame.toString());
-					} else {
-						lblNumGuesses.setText(newGame.getGuessesLeft() + "");
-						stand.setIcon(imgArr[newGame.getGuessesLeft()]);
-					
+				if (newGame.guessLetter(btn.getText().charAt(0))) {
+					fldHidden.setText(newGame.toString());
+				} else {
+					lblNumGuesses.setText(newGame.getGuessesLeft() + "");
+					stand.setIcon(imgArr[newGame.getGuessesLeft()]);
+
 				}
 			}
 		}
-
+		
+		
 		if (newGame.isGameOver()) {
 			if (newGame.getWinLossStatus()) {
 				JOptionPane.showMessageDialog(null, "You won!!");
@@ -331,9 +324,8 @@ public class HangmanFrame implements ActionListener, WindowListener {
 				newGame.game.board.gamePlayed(name, false);
 			}
 
-			// This works, but isn't the most friendly UI
-//			newgame_ActionPerformed();
-			initialize();
+			newGame = new SingleGame();
+			startGame();
 
 		}
 	}
@@ -346,22 +338,21 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 	}
 
-
 	private void resume_ActionPerformed() {
 		newGame = newGame.game.resumeSingleGame();
 //		initialize();
 		startGame();
 	}
-	
-	
+
 	private void quit_ActionPerformed() {
 		save_ActionPerformed();
 		System.exit(1);
 	}
 
 	private void save_ActionPerformed() {
+		newGame.game.saveGame();
 		newGame.save();
-		
+
 	}
 
 	private void rules_ActionPerformed() {
@@ -371,18 +362,17 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 	private void hint_ActionPerformed() {
 		newGame.hint();
-		//This seems massively inefficient,but i'm not sure how else to do this without returning something in the hint() 
-		//or guessLetter()
-		for (JButton btn: letterButtons) {
-			for(int i=0; i< newGame.getGuessedLetters().getLength(); i++) {
+		// This seems massively inefficient,but i'm not sure how else to do this without
+		// returning something in the hint()
+		// or guessLetter()
+		for (JButton btn : letterButtons) {
+			for (int i = 0; i < newGame.getGuessedLetters().getLength(); i++) {
 				if (btn.getText().equalsIgnoreCase(newGame.getGuessedLetters().getElementAt(i) + "")) {
 					btn.setBackground(new Color(255, 255, 255));
 					btn.setEnabled(false);
 				}
 			}
 		}
-		lblNumGuesses.setText(newGame.getGuessesLeft() + "");
-		stand.setIcon(imgArr[newGame.getGuessesLeft()]);
 		fldHidden.setText(newGame.toString());
 
 	}
@@ -390,7 +380,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	private void scoreboard_ActionPerformed() {
 
 		JOptionPane.showMessageDialog(null, new ScoreBoard(), "Scoreboard", JOptionPane.PLAIN_MESSAGE);
-		
+
 //		try {
 //			// use a display() from the ScoreBoard?
 //			newGame.game.board.frame.setVisible(true);
@@ -403,42 +393,40 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
 
-		
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		
-		
+
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
