@@ -8,9 +8,9 @@ import java.io.ObjectOutputStream;
 import linked_data_structures.*;
 
 public class SingleGame implements java.io.Serializable{
-	public static HangmanGame game = new HangmanGame();
+//	public static HangmanGame game;
 	private SinglyLinkedList<String> wordLetters;
-	private SinglyLinkedList<String> guessedLetters;
+	private SinglyLinkedList<String> guessedLetters = new SinglyLinkedList<>();
 	private String theWord;
 	private int badGuessNum;
 	private StringBuilder hiddenWord;
@@ -18,36 +18,27 @@ public class SingleGame implements java.io.Serializable{
 	
 	
 	public SingleGame() {
-		System.out.println("NEW SINGLEGAME GETTING CREATED");
-		game = this.resumeGame();
-		if (game == null) {
-			System.out.println("NEW HANGMANGAME GETTING CREATED");
-			game = new HangmanGame();
-		}else {
-			System.out.println("Tryring to resume game");
-		}
-		
 		gameWon = false;
 		wordLetters = new SinglyLinkedList<String>();
-		guessedLetters = new SinglyLinkedList<String>();
+//		guessedLetters = new SinglyLinkedList<String>();
 		badGuessNum = 0;
-		this.theWord = "Test";
-		this.theWord = game.sendNextWord();
+//		this.theWord = game.sendNextWord();
 		
+		
+//		toString();
+	}
+	
+	public void setWord(String newWord) {
+		this.theWord = newWord;
 		for (int i = 0; i < theWord.length(); i++) {
 			wordLetters.add(theWord.charAt(i) + "", i);
 		}
-		toString();
 	}
-	
-	//Add setWord to verify it's a proper length? !=empty?
 	
 	public SinglyLinkedList getGuessedLetters() {
 		return guessedLetters;
 	}
 	
-	//When hint, inc guess
-
 	public void hint() {
 		int randIndex = (int) ((Math.random() * (wordLetters.getLength())));
 		int j = 0;
@@ -67,7 +58,6 @@ public class SingleGame implements java.io.Serializable{
 	}
 
 	
-	//That anything that isn't a letter
 	public String toString() {
 		hiddenWord = new StringBuilder();
 		for (int i = 0; i < wordLetters.getLength(); i++) {
@@ -104,7 +94,6 @@ public class SingleGame implements java.io.Serializable{
 			gameWon = true;
 			return true;
 		}
-
 		return false;
 	}
 

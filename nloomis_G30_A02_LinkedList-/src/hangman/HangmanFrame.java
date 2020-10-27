@@ -20,6 +20,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	private char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
+	private HangmanGame game = new HangmanGame();
 
 	private JPanel letterpanel = new JPanel();
 
@@ -51,7 +52,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	private ImageIcon[] imgArr = { leg2Img, leg1Img, arm2Img, arm1Img, bodyImg, headImg, standImg };
 
 	private JLabel lblNumGuesses = new JLabel();
-	private SingleGame newGame;
+//	private SingleGame newGame;
 	private JTextField fldHidden = new JTextField();
 	private JLabel stand = new JLabel();
 	private JLabel lblName = new JLabel();
@@ -108,42 +109,39 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		}
 		return true;
 
-		// TODO Validate name is valid
-//		 validate that they selected something from dropdown
 	}
 
 	private void startGame() {
 //		newGame.game.board.findPlayer(name);	
-		newGame.game.board.addToScoreboard(name);
+//		game.board.addToScoreboard(name);
 
 		fileMenu.setEnabled(true);
 
 		for (JButton btn : letterButtons) {
 			btn.setEnabled(true);
 			btn.setBackground(new Color(69, 153, 64)); // Reseting all the buttons to be enabled and the right color
-			for (int i = 0; i < newGame.getGuessedLetters().getLength(); i++) {
-				if (btn.getText().equalsIgnoreCase(newGame.getGuessedLetters().getElementAt(i) + "")) {
+			for (int i = 0; i < game.getCurrGame().getGuessedLetters().getLength(); i++) {
+				if (btn.getText().equalsIgnoreCase(game.getCurrGame().getGuessedLetters().getElementAt(i) + "")) {
 					btn.setBackground(new Color(255, 255, 255));
 					btn.setEnabled(false);
 				}
 			}
 		}
 
-		fldHidden.setText(newGame.toString());
-		lblNumGuesses.setText(newGame.getGuessesLeft() + "");
-		stand.setIcon(imgArr[newGame.getGuessesLeft()]);
+		fldHidden.setText(game.getCurrGame().toString());
+		lblNumGuesses.setText(game.getCurrGame().getGuessesLeft() + "");
+		stand.setIcon(imgArr[game.getCurrGame().getGuessesLeft()]);
 
 		btnResume.setEnabled(false);
 		btnPlay.setEnabled(false);
 		namefld.setEnabled(false);
 		cmbxPrevPlayers.setEnabled(false);
-		fldHidden.setText(newGame.toString());
+		System.out.println("currentGame string is " + game.getCurrGame().toString());
+		fldHidden.setText(game.getCurrGame().toString());
 
 	}
 
 	private void initialize() {
-		
-		newGame = new SingleGame();
 
 		frame.getContentPane().setBackground(new Color(149, 64, 153));
 		frame.getContentPane().setForeground(Color.WHITE);
@@ -202,10 +200,10 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		cmbxPrevPlayers.setEnabled(true);
 		cmbxPrevPlayers.setModel(new DefaultComboBoxModel(new String[] { "Previous Players" }));
 
-		for (int i=0; i< newGame.game.board.getNumPlayers(); i++) {
-			System.out.println(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
-			cmbxPrevPlayers.addItem(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
-		}
+//		for (int i=0; i< newGame.game.board.getNumPlayers(); i++) {
+//			System.out.println(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
+//			cmbxPrevPlayers.addItem(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
+//		}
 
 		cmbxPrevPlayers.setBounds(494, 62, 147, 21);
 		frame.getContentPane().add(cmbxPrevPlayers);
@@ -279,7 +277,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 		if (e.getSource() == btnPlay) {
 			if (valName()) {
-				newGame = new SingleGame();
+				game.resetSingleGame();
 				startGame();
 			} else {
 				JOptionPane.showMessageDialog(null, "Please enter a name or select one from the dropdown");
@@ -304,27 +302,27 @@ public class HangmanFrame implements ActionListener, WindowListener {
 			if (e.getSource() == btn) {
 				btn.setBackground(new Color(255, 255, 255));
 				btn.setEnabled(false);
-				if (newGame.guessLetter(btn.getText().charAt(0))) {
-					fldHidden.setText(newGame.toString());
+				if (game.getCurrGame().guessLetter(btn.getText().charAt(0))) {
+					fldHidden.setText(game.getCurrGame().toString());
 				} else {
-					lblNumGuesses.setText(newGame.getGuessesLeft() + "");
-					stand.setIcon(imgArr[newGame.getGuessesLeft()]);
+					lblNumGuesses.setText(game.getCurrGame().getGuessesLeft() + "");
+					stand.setIcon(imgArr[game.getCurrGame().getGuessesLeft()]);
 
 				}
 			}
 		}
 		
 		
-		if (newGame.isGameOver()) {
-			if (newGame.getWinLossStatus()) {
+		if (game.getCurrGame().isGameOver()) {
+			if (game.getCurrGame().getWinLossStatus()) {
 				JOptionPane.showMessageDialog(null, "You won!!");
-				newGame.game.board.gamePlayed(name, true);
+//				newGame.game.board.gamePlayed(name, true);
 			} else {
 				JOptionPane.showMessageDialog(null, "You lost!!");
-				newGame.game.board.gamePlayed(name, false);
+//				newGame.game.board.gamePlayed(name, false);
 			}
 
-			newGame = new SingleGame();
+			game.resetSingleGame();
 			startGame();
 
 		}
@@ -339,7 +337,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void resume_ActionPerformed() {
-		newGame = newGame.game.resumeSingleGame();
+//		newGame = game.resumeSingleGame();
 //		initialize();
 		startGame();
 	}
@@ -350,8 +348,8 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void save_ActionPerformed() {
-		newGame.game.saveGame();
-		newGame.save();
+		game.saveGame();
+		game.getCurrGame().save();
 
 	}
 
@@ -361,19 +359,19 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void hint_ActionPerformed() {
-		newGame.hint();
+		game.getCurrGame().hint();
 		// This seems massively inefficient,but i'm not sure how else to do this without
 		// returning something in the hint()
 		// or guessLetter()
 		for (JButton btn : letterButtons) {
-			for (int i = 0; i < newGame.getGuessedLetters().getLength(); i++) {
-				if (btn.getText().equalsIgnoreCase(newGame.getGuessedLetters().getElementAt(i) + "")) {
+			for (int i = 0; i < game.getCurrGame().getGuessedLetters().getLength(); i++) {
+				if (btn.getText().equalsIgnoreCase(game.getCurrGame().getGuessedLetters().getElementAt(i) + "")) {
 					btn.setBackground(new Color(255, 255, 255));
 					btn.setEnabled(false);
 				}
 			}
 		}
-		fldHidden.setText(newGame.toString());
+		fldHidden.setText(game.getCurrGame().toString());
 
 	}
 
