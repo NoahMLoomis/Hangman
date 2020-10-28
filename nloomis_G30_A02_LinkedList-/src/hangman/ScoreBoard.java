@@ -11,7 +11,7 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 
-public class ScoreBoard extends JPanel {
+public class ScoreBoard extends JPanel implements java.io.Serializable {
 	private DoublyLinkedList<Player> players = new DoublyLinkedList();
 	private JTable table;
 	DefaultTableModel model;
@@ -20,7 +20,7 @@ public class ScoreBoard extends JPanel {
 	 */
 	public ScoreBoard() {
 		
-
+		System.out.println("NEW SCOREBOARD GETTING CREATED");
 		
 		for (int i=0; i<players.getLength(); i++) {
 			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
@@ -52,23 +52,29 @@ public class ScoreBoard extends JPanel {
 		
 		if (winOrLose) {
 			findPlayer(playerName).incWins();
+			
 		} else {
 			findPlayer(playerName).incLosses();
+		}
+		
+		for (int i = model.getRowCount() - 1; i >= 0; i--) {
+		    model.removeRow(i);
+		}
+		
+		for (int i=0; i<players.getLength(); i++) {
+			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
 		}
 		
 		return findPlayer(playerName);
 	}
 	
-	
-	
-/*	  findPlayer(String playerName) searches through the players DoublyLinkedList
+	/*findPlayer(String playerName) searches through the players DoublyLinkedList
 	  		if the player is not named or null, is given the default name of Anonymous
 	  		if the player already exists, do nothing
 	  		if the player does not exist, create a new player and add to players DoublyLinkedList
 			return the player
-*/  
-	 
-
+	 */
+	
 	public Player findPlayer(String playerName) {
 		Player currPlayer=null;
 		if ((playerName == null) || (playerName.equalsIgnoreCase(""))) {
@@ -78,6 +84,7 @@ public class ScoreBoard extends JPanel {
 		boolean playerFound = false;
 		for (int i = 0; i < players.getLength(); i++) {
 			if (players.getElementAt(i).getPlayerName().equalsIgnoreCase(playerName)) {
+				System.out.println("Player has been found " + playerName);
 				playerFound = true;
 				currPlayer = players.getElementAt(i);
 
@@ -85,38 +92,24 @@ public class ScoreBoard extends JPanel {
 		}
 		
 		if (!playerFound) {
+			System.out.println("creating new player with the name " + playerName);
 			currPlayer= new Player(playerName);
 			players.add(currPlayer);
+			model.addRow(new Object[] {currPlayer.getPlayerName(), currPlayer.getWins(), currPlayer.getLosses()});
 		}
 		
 		return currPlayer;
 		
 	}
-	
-	public void addToScoreboard(String playername) {
-		Player currPlayer = new Player(playername);
-		
-		players.add(currPlayer);
-//		System.out.println("Player length is " + players.getLength());
-		for (int i=0; i< players.getLength(); i++) {
-//			System.out.println("INSIDE INITIALIZE() for addToScoreboard()");
-
-			model.addRow(new Object[] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getLosses()});
-		}
-	}
-	
 	public int getNumPlayers() {
 		return players.getLength();
 	}
 
 	public DoublyLinkedList<Player> getPlayers(){
-//		for (int i=0; i< players.getLength(); i++) {
-//			System.out.println(players.getElementAt(i).getPlayerName());
-//		}
 		return players;
 	}
 	
-	private void initialize() {
+	public void initialize() {
 		setLayout(null);
 		
 		setPreferredSize(new Dimension(500, 500));

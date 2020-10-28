@@ -1,6 +1,6 @@
 package hangman;
 
-public class Player {
+public class Player implements java.io.Serializable{
 
 	private String playerName;
 	private int timesPlayed;

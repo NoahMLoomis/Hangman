@@ -10,7 +10,7 @@ import linked_data_structures.*;
 public class SingleGame implements java.io.Serializable{
 //	public static HangmanGame game;
 	private SinglyLinkedList<String> wordLetters;
-	private SinglyLinkedList<String> guessedLetters = new SinglyLinkedList<>();
+	private SinglyLinkedList<String> guessedLetters;
 	private String theWord;
 	private int badGuessNum;
 	private StringBuilder hiddenWord;
@@ -20,12 +20,14 @@ public class SingleGame implements java.io.Serializable{
 	public SingleGame() {
 		gameWon = false;
 		wordLetters = new SinglyLinkedList<String>();
-//		guessedLetters = new SinglyLinkedList<String>();
+		guessedLetters = new SinglyLinkedList<String>();
 		badGuessNum = 0;
-//		this.theWord = game.sendNextWord();
-		
 		
 //		toString();
+	}
+	
+	public String getWord() {
+		return this.theWord;
 	}
 	
 	public void setWord(String newWord) {
@@ -123,47 +125,47 @@ public class SingleGame implements java.io.Serializable{
 
 	}
 
-	public void save(){
+//	public void save(){
+//	
+//			String filename = "./cereal/singleGameSerealized.txt"; 
+//		
+//		try {
+//			FileOutputStream file = new FileOutputStream(filename);
+//			ObjectOutputStream out = new ObjectOutputStream(file);
+//			
+//			out.writeObject(this);
+//			file.close();
+//			
+//			System.out.println("Single Game serealized");
+//		}catch (Exception e) {
+//			System.out.println("error with serealization for SingleGame " + e);
+//		}
+//	}
 	
-			String filename = "./cereal/singleGameSerealized.txt"; 
-		
-		try {
-			FileOutputStream file = new FileOutputStream(filename);
-			ObjectOutputStream out = new ObjectOutputStream(file);
-			
-			out.writeObject(this);
-			file.close();
-			
-			System.out.println("Single Game serealized");
-		}catch (Exception e) {
-			System.out.println("error with serealization for SingleGame " + e);
-		}
-	}
-	
-	public HangmanGame resumeGame() {
-		
-		HangmanGame prevGame=null;
-		
-	     try
-	     {  
-	    	String filename = "./cereal/gameSerealized.txt"; 
-	         // Reading the object from a file 
-	         FileInputStream file = new FileInputStream(filename); 
-	         ObjectInputStream in = new ObjectInputStream(file); 
-	           
-	         prevGame = (HangmanGame)in.readObject(); 
-	           
-	         in.close(); 
-	         file.close(); 
-	         System.out.println("Resumimg the HangmanGame from SingleGame");
-	     }
-	       
-	     catch(Exception e) 
-	     { 
-	         System.out.println("IOException is caught in SingleGame " + e); 
-	     } 
-		return prevGame;
-	}
+//	public HangmanGame resumeGame() {
+//		
+//		HangmanGame prevGame=null;
+//		
+//	     try
+//	     {  
+//	    	String filename = "./cereal/gameSerealized.txt"; 
+//	         // Reading the object from a file 
+//	         FileInputStream file = new FileInputStream(filename); 
+//	         ObjectInputStream in = new ObjectInputStream(file); 
+//	           
+//	         prevGame = (HangmanGame)in.readObject(); 
+//	           
+//	         in.close(); 
+//	         file.close(); 
+//	         System.out.println("Resumimg the HangmanGame from SingleGame");
+//	     }
+//	       
+//	     catch(Exception e) 
+//	     { 
+//	         System.out.println("IOException is caught in SingleGame " + e); 
+//	     } 
+//		return prevGame;
+//	}
 
 
 }

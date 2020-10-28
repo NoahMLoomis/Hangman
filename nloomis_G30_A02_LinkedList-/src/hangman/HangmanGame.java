@@ -10,29 +10,26 @@ import java.util.LinkedList;
 import linked_data_structures.SinglyLinkedList;
 
 public class HangmanGame implements java.io.Serializable{
-	public static ScoreBoard board; 
-	public static Dictionary dic;
+	public ScoreBoard board; 
+	public  Dictionary dic;
 	public SingleGame newGame;
-	private LinkedList<SingleGame> allGames = new LinkedList<>();
-	private HangmanGame myGame;
+	private SinglyLinkedList<SingleGame> allGames;
 	
 	 public HangmanGame() {
+		 HangmanGame prevGame = resume();
 		
-		if (resume().board == null) {
-			
+		if (prevGame== null) {
+			allGames = new SinglyLinkedList<>();
 			board = new ScoreBoard();
 			dic= new Dictionary();
 			resetSingleGame();
 		}else {
-			board = resume().board;
-			dic = resume().dic;
-			newGame = resume().newGame;
+			allGames = prevGame.allGames;
+			board = prevGame.board;
+			dic = prevGame.dic;
+			newGame = prevGame.newGame;
 		}
 
-	}
-	
-	public String sendNextWord() {
-		return dic.getNextWord();
 	}
 	
 	public SingleGame getCurrGame() {
@@ -40,34 +37,16 @@ public class HangmanGame implements java.io.Serializable{
 	}
 	
 	public void resetSingleGame() {
+		
 		allGames.add(newGame);
+		System.out.println("All games size is " + allGames.getLength());
+		for (int i=0; i < allGames.getLength(); i++) {
+			System.out.println(allGames.getElementAt(i));
+		}
 		newGame = new SingleGame();
-		newGame.setWord(sendNextWord());
+		newGame.setWord(dic.getNextWord());
 	}
 	
-//	public SingleGame resumeSingleGame() {
-//		
-//		SingleGame prevGame=null;
-////		if (prevGame != null) {
-//		
-//	     try
-//	     {  
-//	    	String filename = "./cereal/singleGameSerealized.txt"; 
-//	         FileInputStream file = new FileInputStream(filename); 
-//	         ObjectInputStream in = new ObjectInputStream(file); 
-//	           
-//	         prevGame = (SingleGame)in.readObject(); 
-//	           
-//	         in.close(); 
-//	         file.close(); 
-//	     } 
-//	       
-//	     catch(Exception e) 
-//	     { 
-//	         System.out.println("IOException is caught " + e); 
-//	     } 
-//		return prevGame;
-//	}
 	
 	public HangmanGame resume() {
 		HangmanGame prevGame=null;
@@ -82,12 +61,12 @@ public class HangmanGame implements java.io.Serializable{
 	           
 	         in.close(); 
 	         file.close(); 
-	     } 
-	       
+	     }
 	     catch(Exception e) 
 	     { 
 	         System.out.println("IOException is caught " + e); 
 	     } 
+	     
 		return prevGame;
 	}
 	

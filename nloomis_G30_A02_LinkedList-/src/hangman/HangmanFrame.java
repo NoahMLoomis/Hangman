@@ -112,10 +112,10 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void startGame() {
-//		newGame.game.board.findPlayer(name);	
 //		game.board.addToScoreboard(name);
-
-		fileMenu.setEnabled(true);
+		
+		game.board.findPlayer(name);
+//		fileMenu.setEnabled(true);
 
 		for (JButton btn : letterButtons) {
 			btn.setEnabled(true);
@@ -136,7 +136,6 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		btnPlay.setEnabled(false);
 		namefld.setEnabled(false);
 		cmbxPrevPlayers.setEnabled(false);
-		System.out.println("currentGame string is " + game.getCurrGame().toString());
 		fldHidden.setText(game.getCurrGame().toString());
 
 	}
@@ -167,7 +166,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 		frame.setJMenuBar(menuBar);
 		menuBar.add(fileMenu);
-		fileMenu.setEnabled(false);
+		fileMenu.setEnabled(true);
 		fileMenu.add(saveMenuItem);
 		fileMenu.add(scoreboardMenuItem);
 		fileMenu.add(quitMenuItem);
@@ -200,10 +199,9 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		cmbxPrevPlayers.setEnabled(true);
 		cmbxPrevPlayers.setModel(new DefaultComboBoxModel(new String[] { "Previous Players" }));
 
-//		for (int i=0; i< newGame.game.board.getNumPlayers(); i++) {
-//			System.out.println(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
-//			cmbxPrevPlayers.addItem(newGame.game.board.getPlayers().getElementAt(i).getPlayerName());
-//		}
+		for (int i=0; i< game.board.getNumPlayers(); i++) {
+			cmbxPrevPlayers.addItem(game.board.getPlayers().getElementAt(i).getPlayerName());
+		}
 
 		cmbxPrevPlayers.setBounds(494, 62, 147, 21);
 		frame.getContentPane().add(cmbxPrevPlayers);
@@ -315,11 +313,11 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		
 		if (game.getCurrGame().isGameOver()) {
 			if (game.getCurrGame().getWinLossStatus()) {
-				JOptionPane.showMessageDialog(null, "You won!!");
-//				newGame.game.board.gamePlayed(name, true);
+				JOptionPane.showMessageDialog(null, "You won!!\n" + game.getCurrGame().getWord());
+				game.board.gamePlayed(name, true);
 			} else {
-				JOptionPane.showMessageDialog(null, "You lost!!");
-//				newGame.game.board.gamePlayed(name, false);
+				JOptionPane.showMessageDialog(null, "You lost!!\n" + game.getCurrGame().getWord());
+				game.board.gamePlayed(name, false);
 			}
 
 			game.resetSingleGame();
@@ -337,8 +335,10 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void resume_ActionPerformed() {
-//		newGame = game.resumeSingleGame();
-//		initialize();
+		game =  game.resume();
+		if (game == null) {
+			game.resetSingleGame();
+		}
 		startGame();
 	}
 
@@ -349,7 +349,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 	private void save_ActionPerformed() {
 		game.saveGame();
-		game.getCurrGame().save();
+//		game.getCurrGame().save();
 
 	}
 
@@ -376,16 +376,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void scoreboard_ActionPerformed() {
-
-		JOptionPane.showMessageDialog(null, new ScoreBoard(), "Scoreboard", JOptionPane.PLAIN_MESSAGE);
-
-//		try {
-//			// use a display() from the ScoreBoard?
-//			newGame.game.board.frame.setVisible(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
+		JOptionPane.showMessageDialog(null, game.board, "Scoreboard", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	@Override
