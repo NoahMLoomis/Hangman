@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import linked_data_structures.*;
 
 public class SingleGame implements java.io.Serializable{
-//	public static HangmanGame game;
 	private SinglyLinkedList<String> wordLetters;
 	private SinglyLinkedList<String> guessedLetters;
 	private String theWord;
@@ -23,7 +22,7 @@ public class SingleGame implements java.io.Serializable{
 		guessedLetters = new SinglyLinkedList<String>();
 		badGuessNum = 0;
 		
-//		toString();
+		toString();
 	}
 	
 	public String getWord() {
@@ -52,6 +51,7 @@ public class SingleGame implements java.io.Serializable{
 			}
 			j++;
 		}
+		this.badGuessNum++;
 		this.guessLetter(Character.toUpperCase(wordLetters.getElementAt(randIndex).charAt(0)));
 	}
 
@@ -124,48 +124,5 @@ public class SingleGame implements java.io.Serializable{
 		return false;
 
 	}
-
-//	public void save(){
-//	
-//			String filename = "./cereal/singleGameSerealized.txt"; 
-//		
-//		try {
-//			FileOutputStream file = new FileOutputStream(filename);
-//			ObjectOutputStream out = new ObjectOutputStream(file);
-//			
-//			out.writeObject(this);
-//			file.close();
-//			
-//			System.out.println("Single Game serealized");
-//		}catch (Exception e) {
-//			System.out.println("error with serealization for SingleGame " + e);
-//		}
-//	}
-	
-//	public HangmanGame resumeGame() {
-//		
-//		HangmanGame prevGame=null;
-//		
-//	     try
-//	     {  
-//	    	String filename = "./cereal/gameSerealized.txt"; 
-//	         // Reading the object from a file 
-//	         FileInputStream file = new FileInputStream(filename); 
-//	         ObjectInputStream in = new ObjectInputStream(file); 
-//	           
-//	         prevGame = (HangmanGame)in.readObject(); 
-//	           
-//	         in.close(); 
-//	         file.close(); 
-//	         System.out.println("Resumimg the HangmanGame from SingleGame");
-//	     }
-//	       
-//	     catch(Exception e) 
-//	     { 
-//	         System.out.println("IOException is caught in SingleGame " + e); 
-//	     } 
-//		return prevGame;
-//	}
-
 
 }
