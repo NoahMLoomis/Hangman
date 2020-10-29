@@ -4,8 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 import linked_data_structures.SinglyLinkedList;
 
@@ -54,7 +52,7 @@ public class HangmanGame implements java.io.Serializable {
 			in.close();
 			file.close();
 		} catch (Exception e) {
-			System.out.println("IOException is caught " + e);
+			System.out.println("File is empty  " + e);
 		}
 		return prevGame;
 	}
@@ -66,6 +64,7 @@ public class HangmanGame implements java.io.Serializable {
 			ObjectOutputStream out = new ObjectOutputStream(file);
 			out.writeObject(this);
 			file.close();
+			System.out.println("Game is cereal now");
 		} catch (Exception e) {
 			System.out.println("error with serealization " + e);
 		}

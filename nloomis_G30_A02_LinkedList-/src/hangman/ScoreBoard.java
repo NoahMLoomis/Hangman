@@ -12,39 +12,43 @@ import java.awt.Dimension;
 import javax.swing.JLabel;
 
 public class ScoreBoard extends JPanel implements java.io.Serializable {
-	private DoublyLinkedList<Player> players = new DoublyLinkedList();
+	private DoublyLinkedList<Player> players;
 	private JTable table;
 	DefaultTableModel model;
 	/**
 	 * Create the panel.
 	 */
 	public ScoreBoard() {
-		
-		System.out.println("NEW SCOREBOARD GETTING CREATED");
-		
+		players = new DoublyLinkedList<>();
+		sort();
 		for (int i=0; i<players.getLength(); i++) {
 			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
 		}
-		
 		initialize();
-		
-	}
-	
-
-	
-	private Player getNextPlayer(int i) {
-		Player currPlayer=null;
-		try {
-			currPlayer=players.getElementAt(i+1);
-		}catch (Exception e) {
-			System.out.println("Exception caught "+e );
-		}
-		return currPlayer;
 	}
 	
 
 	private void sort() {
-//		 TODO sort the players list
+	
+//		
+//		players.add(new Player("a"));
+//		players.add(new Player("b'"));
+//		players.add(new Player("c"));
+//		players.add(new Player("z"));
+//		
+//		
+//		
+//		for (int i=0; i < players.getLength(); i++) {
+//			for (int j=1; j < players.getLength(); j++) {
+//				if (players.getElementAt(i).getPlayerName().charAt(0) > players.getElementAt(j).getPlayerName().charAt(0)) {
+//					
+//					Player temp = players.getElementAt(j);
+//					players.remove(j);
+//					players.add(temp, j);
+//				}
+//			}
+//		}
+//		
 	}
 	
 	
@@ -68,7 +72,8 @@ public class ScoreBoard extends JPanel implements java.io.Serializable {
 		return findPlayer(playerName);
 	}
 	
-	/*findPlayer(String playerName) searches through the players DoublyLinkedList
+	/*
+	 * 	findPlayer(String playerName) searches through the players DoublyLinkedList
 	  		if the player is not named or null, is given the default name of Anonymous
 	  		if the player already exists, do nothing
 	  		if the player does not exist, create a new player and add to players DoublyLinkedList
@@ -109,7 +114,7 @@ public class ScoreBoard extends JPanel implements java.io.Serializable {
 		return players;
 	}
 	
-	public void initialize() {
+	private void initialize() {
 		setLayout(null);
 		
 		setPreferredSize(new Dimension(500, 500));
@@ -131,7 +136,6 @@ public class ScoreBoard extends JPanel implements java.io.Serializable {
 		scrollPane.setViewportView(table);
 		model = (DefaultTableModel)table.getModel();
 		
-		players.add(new Player("Tristan"));
 		for (int i=0; i<players.getLength(); i++) {
 			model.addRow(new Object [] {players.getElementAt(i).getPlayerName(), players.getElementAt(i).getWins(), players.getElementAt(i).getTimesPlayed()});
 		}

@@ -3,6 +3,7 @@ package hangman;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class HangmanFrame implements ActionListener, WindowListener {
+public class HangmanFrame implements ActionListener {
 
 	private JFrame frame = new JFrame();
 	private ArrayList<JButton> letterButtons = new ArrayList<>();
@@ -110,11 +111,13 @@ public class HangmanFrame implements ActionListener, WindowListener {
 				}
 			}
 		}
-
+		hintMenuItem.setEnabled(true);
 		fldHidden.setText(game.getCurrGame().toString());
 		lblNumGuesses.setText(game.getCurrGame().getGuessesLeft() + "");
 		stand.setIcon(imgArr[game.getCurrGame().getGuessesLeft()]);
 
+		btnPlay.setBackground(new Color(255, 255, 255));
+		btnResume.setBackground(new Color(255, 255, 255));
 		btnResume.setEnabled(false);
 		btnPlay.setEnabled(false);
 		namefld.setEnabled(false);
@@ -128,6 +131,11 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		frame.getContentPane().setForeground(Color.WHITE);
 		frame.setBounds(100, 100, 837, 660);
 		// Bounds on reset
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				quit_ActionPerformed();
+			}
+		});
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Hangman");
@@ -144,6 +152,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		scoreboardMenuItem = new JMenuItem("Scoreboard");
 		quitMenuItem = new JMenuItem("Quit Game");
 		hintMenuItem = new JMenuItem("Hint");
+		hintMenuItem.setEnabled(false);
 		newgameMenuItem = new JMenuItem("New Game");
 
 		frame.setJMenuBar(menuBar);
@@ -196,8 +205,8 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		frame.getContentPane().add(lblOr);
 
 		btnPlay = new JButton("Play");
-		btnPlay.setForeground(new Color(102, 51, 102));
-		btnPlay.setBackground(new Color(51, 153, 255));
+		btnPlay.setForeground(new Color(0,0,0));
+		btnPlay.setBackground(red);
 		btnPlay.setEnabled(true);
 		btnPlay.addActionListener(this);
 		btnPlay.setBounds(298, 112, 85, 21);
@@ -244,8 +253,8 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 		btnResume = new JButton("Resume last game");
 		btnResume.addActionListener(this);
-		btnResume.setForeground(new Color(102, 51, 102));
-		btnResume.setBackground(new Color(51, 153, 255));
+		btnResume.setForeground(new Color(0,0,0));
+		btnResume.setBackground(red);
 		btnResume.setBounds(432, 112, 160, 21);
 		if (game.resume() == null) {
 			btnResume.setEnabled(false);
@@ -277,6 +286,7 @@ public class HangmanFrame implements ActionListener, WindowListener {
 		if (e.getSource() == btnPlay) {
 			if (valName()) {
 				game.resetSingleGame();
+				
 				startGame();
 			} else {
 				JOptionPane.showMessageDialog(null, "Please enter a name or select one from the dropdown");
@@ -349,15 +359,14 @@ public class HangmanFrame implements ActionListener, WindowListener {
 	}
 
 	private void quit_ActionPerformed() {
-		save_ActionPerformed();
-		JOptionPane.showMessageDialog(null, "Thanks for Playing!");
+		game.saveGame();
+		JOptionPane.showMessageDialog(null, "Thanks for Playing! Game is saved");
 		System.exit(1);
 	}
 
 	private void save_ActionPerformed() {
 		game.saveGame();
-//		game.getCurrGame().save();
-
+		JOptionPane.showMessageDialog(null, "Game Saved");
 	}
 
 	private void rules_ActionPerformed() {
@@ -382,45 +391,5 @@ public class HangmanFrame implements ActionListener, WindowListener {
 
 	private void scoreboard_ActionPerformed() {
 		JOptionPane.showMessageDialog(null, game.board, "Scoreboard", JOptionPane.PLAIN_MESSAGE);
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 }
