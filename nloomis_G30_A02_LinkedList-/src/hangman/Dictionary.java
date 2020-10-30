@@ -14,6 +14,10 @@ public class Dictionary implements java.io.Serializable {
 		loadWords();
 	}
 
+	/*
+	 * Read the file dictionary.txt, populate the allWords SinglyLinkedList with the words
+	 */
+	
 	private void loadWords() {
 		try {
 			File dicFile = new File("dictionary.txt");
@@ -28,6 +32,12 @@ public class Dictionary implements java.io.Serializable {
 		}
 	}
 
+	/*
+	 * if allWords is empty, reload the words
+	 * Find a random index of the length of allWords, 
+	 * remove and return the random word 
+	 */
+	
 	public String getNextWord() {
 		if (allWords.getLength() <=0) {
 			loadWords();
@@ -35,8 +45,7 @@ public class Dictionary implements java.io.Serializable {
 		int randIndex = (int) ((Math.random() * (allWords.getLength())));
 		String temp = allWords.getElementAt(randIndex);
 		allWords.remove(randIndex);
-		System.out.println("Number of words left is " + allWords.getLength());
 		return temp;
 	}
 
-}
+}//Dictionary

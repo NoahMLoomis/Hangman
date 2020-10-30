@@ -71,7 +71,12 @@ public class HangmanFrame implements ActionListener {
 	}
 
 	/**
-	 * TODO: -add some flair, colours? -Garbage Collection -Final review
+	 * TODO: 
+	 * -Sort scoreboard
+	 * -Uncomment windowListener
+	 * -finish test cases 
+	 * -Garbage Collection 
+	 * -Final review
 	 */
 	public HangmanFrame() {
 		for (char i : alphabet) {
@@ -131,11 +136,11 @@ public class HangmanFrame implements ActionListener {
 		frame.getContentPane().setForeground(Color.WHITE);
 		frame.setBounds(100, 100, 837, 660);
 		// Bounds on reset
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				quit_ActionPerformed();
-			}
-		});
+//		frame.addWindowListener(new WindowAdapter() {
+//			public void windowClosing(WindowEvent e) {
+//				quit_ActionPerformed();
+//			}
+//		});
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Hangman");
@@ -392,4 +397,4 @@ public class HangmanFrame implements ActionListener {
 	private void scoreboard_ActionPerformed() {
 		JOptionPane.showMessageDialog(null, game.board, "Scoreboard", JOptionPane.PLAIN_MESSAGE);
 	}
-}
+} //HangmanFrame

@@ -11,21 +11,20 @@ public class HangmanGame implements java.io.Serializable {
 	public ScoreBoard board;
 	private Dictionary dic;
 	private SingleGame newGame;
-	private SinglyLinkedList<SingleGame> allGames;
 
 	/*
 	 * This constructor checks if there is a previous game that's been saved. If so,
-	 * it loads that past game If not, it creates a new one
+	 * it loads that past game If not, it creates a new one, as well as a new
+	 * Dictionary, Scoreboard and SingleGame
 	 */
+
 	public HangmanGame() {
 		HangmanGame prevGame = resume();
 		if (prevGame == null) {
-			allGames = new SinglyLinkedList<>();
 			board = new ScoreBoard();
 			dic = new Dictionary();
 			resetSingleGame();
 		} else {
-			allGames = prevGame.allGames;
 			board = prevGame.board;
 			dic = prevGame.dic;
 			newGame = prevGame.newGame;
@@ -36,11 +35,18 @@ public class HangmanGame implements java.io.Serializable {
 		return newGame;
 	}
 
+	/*
+	 * Creates a new game, and gets the next word from the dictionary
+	 */
+
 	public void resetSingleGame() {
-		allGames.add(newGame);
-		newGame = new SingleGame();
-		newGame.setWord(dic.getNextWord());
+		newGame = new SingleGame(dic.getNextWord());
 	}
+
+	/*
+	 * If there's a previous HangmanGame that's been Serealized, return that game
+	 * else, return null
+	 */
 
 	public HangmanGame resume() {
 		HangmanGame prevGame = null;
@@ -70,4 +76,4 @@ public class HangmanGame implements java.io.Serializable {
 		}
 	}
 
-}
+}// HangmanGame

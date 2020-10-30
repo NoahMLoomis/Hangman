@@ -57,4 +57,4 @@ public class Player implements java.io.Serializable{
 		return timesPlayed - wins;
 	}
 
-}
+} //Player
